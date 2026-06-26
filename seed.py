@@ -10,10 +10,10 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "backend"))
 
-from backend.app.database.connection import SessionLocal, Base, engine
-from backend.app.models.models import Candidate, JobDescription, User
-from backend.app.services.vector_store import ChromaStore
-from backend.app.utils.parser import extract_text_from_docx, parse_jd_requirements
+from app.database.connection import SessionLocal, Base, engine
+from app.models.models import Candidate, JobDescription, User
+from app.services.vector_store import ChromaStore
+from app.utils.parser import extract_text_from_docx, parse_jd_requirements
 
 def seed_database():
     print("Initializing Database tables...")
@@ -216,7 +216,7 @@ def seed_database():
         ]
 
         from text_utils import build_candidate_text
-        from backend.app.embeddings.generator import EmbeddingGenerator
+        from app.embeddings.generator import EmbeddingGenerator
         generator = EmbeddingGenerator()
         chroma = ChromaStore()
 

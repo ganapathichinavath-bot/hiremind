@@ -211,9 +211,18 @@ export default function Dashboard() {
               )}
 
               {uploadResult && (
-                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs mb-4 flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Ingested {uploadResult.imported} records successfully!</span>
+                <div className="space-y-3 mb-4">
+                  <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Ingested {uploadResult.imported} records successfully!</span>
+                  </div>
+                  <Link 
+                    to="/job-analysis"
+                    className="flex items-center justify-center gap-2 py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl transition-all shadow-md shadow-indigo-600/20"
+                  >
+                    <span>Proceed to Step 2: Job Criteria Setup</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
                 </div>
               )}
             </div>

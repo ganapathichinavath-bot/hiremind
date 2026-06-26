@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import { useAuth } from "../providers";
 import { 
@@ -16,7 +17,8 @@ import {
   Mail,
   Phone,
   UserCheck,
-  X
+  X,
+  ArrowRight
 } from "lucide-react";
 import { 
   Radar, 
@@ -142,8 +144,17 @@ export default function SavedCandidates() {
               Your bookmarked candidates from the discovery process.
             </p>
           </div>
-          <div className="text-xs text-indigo-400 font-semibold px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
-            {total} Bookmarked Candidates
+          <div className="flex items-center gap-3">
+            <div className="text-xs text-indigo-400 font-semibold px-4 py-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
+              {total} Bookmarked Candidates
+            </div>
+            <Link 
+              to="/submission"
+              className="py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl transition-all shadow-md shadow-indigo-600/20 flex items-center gap-2"
+            >
+              <span>Proceed to Step 5: Export Submission</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
 

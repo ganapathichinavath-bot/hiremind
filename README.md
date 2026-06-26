@@ -1,3 +1,13 @@
+---
+title: hiremind-backend
+emoji: 🧠
+colorFrom: indigo
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # Redrob Candidate Ranker
 
 Production-ready full-stack app and offline ranking pipeline for the INDIA RUNS Intelligent Candidate Discovery and Ranking Challenge.

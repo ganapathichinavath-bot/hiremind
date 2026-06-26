@@ -166,6 +166,14 @@ def list_candidates(
     db: Session = Depends(get_db),
     current_user: Any = Depends(get_current_user)
 ):
+    # On-demand self-healing seed if database is empty
+    if db.query(Candidate).count() == 0:
+        try:
+            from seed import seed_database
+            seed_database()
+        except Exception as e:
+            print(f"On-demand seeding failed: {e}")
+            
     query = db.query(Candidate)
     
     if search:
@@ -243,6 +251,14 @@ def get_analytics(
     db: Session = Depends(get_db),
     current_user: Any = Depends(get_current_user)
 ):
+    # On-demand self-healing seed if database is empty
+    if db.query(Candidate).count() == 0:
+        try:
+            from seed import seed_database
+            seed_database()
+        except Exception as e:
+            print(f"On-demand seeding failed: {e}")
+            
     candidates = db.query(Candidate).all()
     if not candidates:
         return {

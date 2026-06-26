@@ -11,4 +11,5 @@ pyjwt>=2.8.0
 sentence-transformers>=2.2.2
 python-dotenv>=1.0.0
 firebase-admin>=6.0.0
+python-multipart>=0.0.9
 

@@ -1,0 +1,33 @@
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+node_modules/
+.next/
+artifacts/
+output/
+*.pkl
+*.npy
+.DS_Store
+__MACOSX/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+candidate_ranker.db
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Cache & Build
+chroma_db/
+hf_cache/
+.streamlit/
+
+# Firebase admin key
+firebase-service-account.json
+

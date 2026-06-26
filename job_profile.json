@@ -1,0 +1,51 @@
+{
+  "role": "Senior AI Engineer \u2014 Founding Team",
+  "required_skills": [
+    "embeddings-based retrieval systems",
+    "sentence-transformers",
+    "vector databases",
+    "hybrid search",
+    "python",
+    "evaluation frameworks",
+    "ndcg",
+    "mrr",
+    "map"
+  ],
+  "preferred_skills": [
+    "llm fine-tuning",
+    "lora",
+    "qlora",
+    "peft",
+    "learning-to-rank",
+    "hr-tech",
+    "distributed systems",
+    "large-scale inference"
+  ],
+  "required_experience": 5.0,
+  "disqualifiers": [
+    "pure research",
+    "langchain only",
+    "no production code in 18 months",
+    "title-chasers",
+    "consulting-only",
+    "computer vision only",
+    "speech only",
+    "robotics only"
+  ],
+  "location_requirements": [
+    "pune",
+    "noida",
+    "delhi",
+    "gurgaon",
+    "hyderabad",
+    "bangalore",
+    "bengaluru",
+    "mumbai"
+  ],
+  "behavior_expectations": [
+    "async-first",
+    "writes a lot",
+    "scrappy",
+    "moves fast"
+  ]
+}

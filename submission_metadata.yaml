@@ -1,0 +1,51 @@
+# Redrob Hackathon — Submission Metadata
+
+team_name: "redrob-ranker"
+
+primary_contact:
+  name: "Team Lead"
+  email: "primary@example.com"
+  phone: "+91-XXXXXXXXXX"
+
+team_members:
+  - name: "Team Lead"
+    email: "primary@example.com"
+    role: "ML Engineer"
+
+github_repo: "https://github.com/YOUR_USERNAME/redrob-ranker"
+sandbox_link: "https://huggingface.co/spaces/YOUR_USERNAME/redrob-ranker"
+
+reproduce_command: "python precompute.py && python rank.py --candidates ../[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl --out output/submission.csv"
+
+compute:
+  platform: "Windows 11 / Python 3.10"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.10.11"
+  os: "Windows 11"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: true
+  pre_computation_time_minutes: 6
+
+ai_tools_used:
+  - "Cursor"
+  - "Claude"
+
+ai_usage_summary: |
+  Used Cursor and Claude for architecture discussion, code scaffolding, and documentation.
+  Candidate data was processed locally; no candidate profiles were sent to external APIs during ranking.
+
+methodology_summary: |
+  Hybrid recruiter-style ranker for Redrob's Senior AI Engineer JD. Phase A precomputes
+  TF-IDF+SVD semantic vectors and structured sub-scores for 100K profiles while disqualifying
+  honeypots. Phase B combines semantic similarity with weighted technical, career, availability, and
+  seniority signals, plus strong penalties for keyword-stuffed non-ML titles. Ranking runs
+  CPU-only in under a minute with no network access.
+
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true

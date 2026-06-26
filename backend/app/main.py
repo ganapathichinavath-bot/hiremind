@@ -34,6 +34,15 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(candidates.router, prefix="/api")
 app.include_router(jobs.router, prefix="/api")
 
+@app.get("/")
+def read_root():
+    return {
+        "status": "online",
+        "service": "HIREMIND AI - Recruiter Copilot API 🚀",
+        "docs": "/docs"
+    }
+
 @app.get("/health")
 def health_check():
     return {"status": "healthy", "service": "recruiter-copilot-api"}
+

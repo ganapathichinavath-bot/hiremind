@@ -112,9 +112,6 @@ export default function Layout({ children }: LayoutProps) {
             <h2 className="text-sm font-medium text-slate-400">Welcome to Recruiter workspace</h2>
           </div>
           <div className="flex items-center gap-4">
-            <div className="text-xs text-slate-400">
-              India Runs Challenge Mode
-            </div>
             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
           </div>
         </header>

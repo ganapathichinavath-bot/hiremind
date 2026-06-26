@@ -64,9 +64,203 @@ def seed_database():
         print(f"Error seeding job description: {e}")
 
     # 2. Seed candidates using precomputed artifacts for fast speed
+    # 2. Seed candidates using precomputed artifacts for fast speed
     print("Reading candidate list and precomputed subscores...")
     if not CANDIDATES_PATH.exists():
-        print(f"Candidates file not found at {CANDIDATES_PATH}. Seeding aborted.")
+        print(f"Candidates file not found at {CANDIDATES_PATH}. Seeding with mock candidates instead.")
+        
+        MOCK_CANDIDATES = [
+            {
+                "candidate_id": "candidate_01_stellar_ai",
+                "profile": {
+                    "headline": "Senior AI & Search Engineer",
+                    "summary": "Expert in building retrieval systems, vector search, and RAG pipelines. Proficient in Python, Pinecone, and evaluation metrics like NDCG and MRR.",
+                    "current_title": "Senior AI Engineer",
+                    "current_company": "NeuralFlow Systems",
+                    "location": "Pune",
+                    "country": "India",
+                    "years_of_experience": 6.5
+                },
+                "redrob_signals": {
+                    "notice_period_days": 15,
+                    "offer_acceptance_rate": 0.9
+                },
+                "skills": [
+                    {"name": "Python"},
+                    {"name": "Embeddings"},
+                    {"name": "Vector Databases"},
+                    {"name": "Pinecone"},
+                    {"name": "NDCG"},
+                    {"name": "MRR"},
+                    {"name": "RAG"}
+                ],
+                "career_history": [
+                    {"title": "Senior AI Engineer", "description": "Designed and deployed embeddings-based search system. Integrated vector databases (Pinecone, Qdrant) at scale."}
+                ],
+                "education": [
+                    {"field_of_study": "Computer Science", "degree": "M.Tech"}
+                ]
+            },
+            {
+                "candidate_id": "candidate_02_strong_ml",
+                "profile": {
+                    "headline": "ML Systems Developer",
+                    "summary": "Machine Learning Engineer with strong focus on semantic search, information retrieval, and LLM fine-tuning using PEFT/LoRA.",
+                    "current_title": "Machine Learning Engineer",
+                    "current_company": "Aether AI",
+                    "location": "Noida",
+                    "country": "India",
+                    "years_of_experience": 4.0
+                },
+                "redrob_signals": {
+                    "notice_period_days": 30,
+                    "offer_acceptance_rate": 0.8
+                },
+                "skills": [
+                    {"name": "Python"},
+                    {"name": "Information Retrieval"},
+                    {"name": "Weaviate"},
+                    {"name": "LoRA"},
+                    {"name": "Fine-Tuning"}
+                ],
+                "career_history": [
+                    {"title": "ML Engineer", "description": "Worked on semantic search ranking models and LLM fine-tuning tasks."}
+                ],
+                "education": [
+                    {"field_of_study": "Data Science", "degree": "B.Tech"}
+                ]
+            },
+            {
+                "candidate_id": "candidate_03_python_dev",
+                "profile": {
+                    "headline": "Backend Engineer (FastAPI & Django)",
+                    "summary": "Software Development Engineer with experience building backend services, API design using FastAPI, Flask, and databases.",
+                    "current_title": "Software Engineer",
+                    "current_company": "ByteScale",
+                    "location": "Bangalore",
+                    "country": "India",
+                    "years_of_experience": 3.0
+                },
+                "redrob_signals": {
+                    "notice_period_days": 45,
+                    "offer_acceptance_rate": 0.75
+                },
+                "skills": [
+                    {"name": "Python"},
+                    {"name": "FastAPI"},
+                    {"name": "PostgreSQL"},
+                    {"name": "Docker"}
+                ],
+                "career_history": [
+                    {"title": "Software Engineer", "description": "Developed microservices with FastAPI. Wrote automated tests and query optimizations."}
+                ],
+                "education": [
+                    {"field_of_study": "Information Technology", "degree": "B.E."}
+                ]
+            },
+            {
+                "candidate_id": "candidate_04_consulting_disq",
+                "profile": {
+                    "headline": "Consultant - IT Services",
+                    "summary": "Technical consultant working on enterprise application development. Experience at major consulting firm.",
+                    "current_title": "Consultant",
+                    "current_company": "TCS",
+                    "location": "Chennai",
+                    "country": "India",
+                    "years_of_experience": 5.0
+                },
+                "redrob_signals": {
+                    "notice_period_days": 90,
+                    "offer_acceptance_rate": 0.6
+                },
+                "skills": [
+                    {"name": "Java"},
+                    {"name": "Spring Boot"},
+                    {"name": "SQL"}
+                ],
+                "career_history": [
+                    {"title": "Systems Engineer", "description": "Maintained legacy Java web applications for international clients."}
+                ],
+                "education": [
+                    {"field_of_study": "Computer Science", "degree": "B.Tech"}
+                ]
+            },
+            {
+                "candidate_id": "candidate_05_honeypot_trap",
+                "profile": {
+                    "headline": "AI Lead Research Scientist",
+                    "summary": "Leading ML research and published papers in cv, computer vision, image segmentation, object detection.",
+                    "current_title": "Lead Researcher",
+                    "current_company": "VisionLabs",
+                    "location": "Mumbai",
+                    "country": "India",
+                    "years_of_experience": 8.0
+                },
+                "redrob_signals": {
+                    "notice_period_days": 30,
+                    "offer_acceptance_rate": 0.85
+                },
+                "skills": [
+                    {"name": "Computer Vision"},
+                    {"name": "PyTorch"},
+                    {"name": "Image Segmentation"},
+                    {"name": "Object Detection"}
+                ],
+                "career_history": [
+                    {"title": "Research Scientist", "description": "Focused purely on computer vision algorithms, object detection models."}
+                ],
+                "education": [
+                    {"field_of_study": "AI", "degree": "PhD"}
+                ]
+            }
+        ]
+
+        from text_utils import build_candidate_text
+        from backend.app.embeddings.generator import EmbeddingGenerator
+        generator = EmbeddingGenerator()
+        chroma = ChromaStore()
+
+        for cand_dict in MOCK_CANDIDATES:
+            candidate_id = cand_dict["candidate_id"]
+            exists = db.query(Candidate).filter(Candidate.candidate_id == candidate_id).first()
+            if exists:
+                continue
+
+            profile = cand_dict["profile"]
+            yoe = profile["years_of_experience"]
+            curr_title = profile["current_title"]
+            curr_company = profile["current_company"]
+            loc = f"{profile.get('location', '')}, {profile.get('country', '')}".strip(", ")
+            skills_list = [s.get("name", "") for s in cand_dict.get("skills", [])]
+
+            db_cand = Candidate(
+                candidate_id=candidate_id,
+                profile_data=cand_dict,
+                years_of_experience=yoe,
+                current_title=curr_title,
+                current_company=curr_company,
+                location=loc,
+                skills_list=skills_list,
+                score=0.0
+            )
+            db.add(db_cand)
+
+            text = build_candidate_text(cand_dict)
+            embedding = generator.get_embedding(text)
+            chroma.add_candidates(
+                [candidate_id],
+                [embedding.tolist()],
+                [{
+                    "candidate_id": candidate_id,
+                    "years_of_experience": yoe,
+                    "current_title": curr_title,
+                    "location": loc
+                }]
+            )
+
+        db.commit()
+        print("Mock candidates successfully seeded.")
+        db.close()
         return
 
     subscores = {}

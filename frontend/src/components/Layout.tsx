@@ -43,7 +43,10 @@ export default function Layout({ children }: LayoutProps) {
       {/* Sidebar (Glassmorphism) */}
       <aside className="w-64 bg-slate-900/40 border-r border-slate-800 flex flex-col backdrop-blur-xl">
         {/* Sidebar Header */}
-        <div className="h-16 flex items-center px-6 border-b border-slate-800/80 gap-3">
+        <Link
+          to="/"
+          className="h-16 flex items-center px-6 border-b border-slate-800/80 gap-3 hover:bg-slate-800/20 transition-colors duration-200 cursor-pointer"
+        >
           <div className="p-2 bg-indigo-600/20 text-indigo-400 rounded-lg border border-indigo-500/30">
             <Sparkles className="w-6 h-6" />
           </div>
@@ -55,7 +58,7 @@ export default function Layout({ children }: LayoutProps) {
               Recruiter Copilot
             </span>
           </div>
-        </div>
+        </Link>
 
         {/* Sidebar Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-1">

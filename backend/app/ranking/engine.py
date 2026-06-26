@@ -11,7 +11,7 @@ import signals
 from disqualify import detect_honeypot, compute_penalty_multiplier
 from text_utils import build_candidate_text
 
-def score_candidate(candidate: Dict[str, Any], semantic_similarity: float, jd_skills: List[str]) -> Tuple[float, Dict[str, Any]]:
+def score_candidate(candidate: Dict[str, Any], semantic_similarity: float, jd_skills: List[str], is_ml_role: bool = True) -> Tuple[float, Dict[str, Any]]:
     # Honeypot check
     hp_reason = detect_honeypot(candidate)
     if hp_reason:
@@ -33,11 +33,11 @@ def score_candidate(candidate: Dict[str, Any], semantic_similarity: float, jd_sk
         }
 
     full_text = build_candidate_text(candidate)
-    penalty_multiplier, penalties = compute_penalty_multiplier(candidate, full_text)
+    penalty_multiplier, penalties = compute_penalty_multiplier(candidate, full_text, is_ml_role=is_ml_role)
 
     # Subscores from signals.py (0-100 range)
     sem_score = signals.semantic_fit_score(semantic_similarity)  # 0-100
-    skill_score, skill_evidence = signals.skill_fit_score(candidate, full_text)
+    skill_score, skill_evidence = signals.skill_fit_score(candidate, full_text, jd_skills=jd_skills)
     exp_score, exp_evidence = signals.experience_fit_score(candidate)
     prod_score = signals.production_experience_score(full_text)
     behav_score, behav_evidence = signals.behavioral_intelligence_score(candidate)

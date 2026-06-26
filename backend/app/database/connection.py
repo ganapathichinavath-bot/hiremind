@@ -12,10 +12,10 @@ load_dotenv(dotenv_path=env_path)
 # Default to SQLite for local fallback, otherwise use PostgreSQL
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./candidate_ranker.db")
 
-# If using sqlite, we need connect_args={"check_same_thread": False}
+# If using sqlite, we need connect_args={"check_same_thread": False, "timeout": 30}
 connect_args = {}
 if DATABASE_URL.startswith("sqlite"):
-    connect_args = {"check_same_thread": False}
+    connect_args = {"check_same_thread": False, "timeout": 30}
 
 engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

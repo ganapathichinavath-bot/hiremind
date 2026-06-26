@@ -44,32 +44,68 @@ def semantic_fit_score(semantic_similarity: float) -> float:
     # Scale from 0.0-1.0 to 0-100
     return max(0.0, min(100.0, semantic_similarity * 100.0))
 
-def skill_fit_score(candidate: dict, full_text: str) -> tuple[float, dict]:
+def skill_fit_score(candidate: dict, full_text: str, jd_skills: list[str] | None = None) -> tuple[float, dict]:
     skills = skill_map(candidate)
-    must_total = 0.0
-    must_weight = 0.0
     evidence: dict[str, list[str]] = {"must_have": [], "nice_to_have": [], "production": production_evidence(full_text)}
 
-    for name, spec in MUST_HAVE_SIGNALS.items():
-        score, hits = _signal_score(full_text, skills, spec)
-        must_total += score * spec["weight"]
-        must_weight += spec["weight"]
-        if hits:
-            evidence["must_have"].extend(hits)
+    if jd_skills:
+        # Match candidate skills against dynamic JD skills list
+        matched_skills = []
+        for skill_name in jd_skills:
+            skill_name_lower = skill_name.lower()
+            if skill_name_lower in skills:
+                matched_skills.append(skill_name)
+                evidence["must_have"].append(skill_name)
+            elif has_keyword(full_text, skill_name_lower):
+                matched_skills.append(skill_name)
+                evidence["nice_to_have"].append(skill_name)
 
-    nice_total = 0.0
-    nice_weight = 0.0
-    for _, spec in NICE_TO_HAVE_SIGNALS.items():
-        score, hits = _signal_score(full_text, skills, spec)
-        nice_total += score * spec["weight"]
-        nice_weight += spec["weight"]
-        if hits:
-            evidence["nice_to_have"].extend(hits)
+        # Base score is proportion of matched skills
+        base = len(matched_skills) / len(jd_skills) if jd_skills else 0.0
+        
+        # Add proficiency and duration bonuses from explicit candidate profile skills
+        bonus = 0.0
+        for skill_name in jd_skills:
+            skill_name_lower = skill_name.lower()
+            if skill_name_lower in skills:
+                cand_skill = skills[skill_name_lower]
+                prof = cand_skill.get("proficiency", "beginner") or "beginner"
+                prof_bonus = {"beginner": 0.0, "intermediate": 0.05, "advanced": 0.10, "expert": 0.15}
+                bonus += prof_bonus.get(prof, 0.0)
+                
+                duration = cand_skill.get("duration_months", 0) or 0
+                if duration >= 24:
+                    bonus += 0.05
+                endorsements = cand_skill.get("endorsements", 0) or 0
+                if endorsements >= 10:
+                    bonus += 0.03
 
-    base = (must_total / must_weight if must_weight else 0.0) * 0.78
-    bonus = (nice_total / nice_weight if nice_weight else 0.0) * 0.12
-    production_bonus = min(0.10, 0.03 * len(evidence["production"]))
-    score = min(1.0, base + bonus + production_bonus)
+        production_bonus = min(0.10, 0.03 * len(evidence["production"]))
+        score = min(1.0, base + bonus + production_bonus)
+    else:
+        # Fallback to static weights if no jd_skills provided
+        must_total = 0.0
+        must_weight = 0.0
+        for name, spec in MUST_HAVE_SIGNALS.items():
+            score, hits = _signal_score(full_text, skills, spec)
+            must_total += score * spec["weight"]
+            must_weight += spec["weight"]
+            if hits:
+                evidence["must_have"].extend(hits)
+
+        nice_total = 0.0
+        nice_weight = 0.0
+        for _, spec in NICE_TO_HAVE_SIGNALS.items():
+            score, hits = _signal_score(full_text, skills, spec)
+            nice_total += score * spec["weight"]
+            nice_weight += spec["weight"]
+            if hits:
+                evidence["nice_to_have"].extend(hits)
+
+        base = (must_total / must_weight if must_weight else 0.0) * 0.78
+        bonus = (nice_total / nice_weight if nice_weight else 0.0) * 0.12
+        production_bonus = min(0.10, 0.03 * len(evidence["production"]))
+        score = min(1.0, base + bonus + production_bonus)
 
     assessment_scores = candidate.get("redrob_signals", {}).get("skill_assessment_scores", {})
     if assessment_scores:

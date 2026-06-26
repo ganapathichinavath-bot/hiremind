@@ -78,6 +78,9 @@ def rank_candidates(
     # Get JD embedding
     jd_embedding = generator.get_embedding(jd.raw_text)
     
+    from disqualify import is_ml_jd
+    is_ml = is_ml_jd(jd.title or "", jd.raw_text or "")
+    
     # Query semantic scores from ChromaDB
     semantic_results = chroma.query_candidates(jd_embedding.tolist(), top_k=len(candidates))
     semantic_lookup = {r["candidate_id"]: r["similarity"] for r in semantic_results}
@@ -87,7 +90,7 @@ def rank_candidates(
     
     for cand in candidates:
         sim = semantic_lookup.get(cand.candidate_id, 0.0)
-        final_score, details = score_candidate(cand.profile_data, sim, jd.extracted_skills)
+        final_score, details = score_candidate(cand.profile_data, sim, jd.extracted_skills, is_ml_role=is_ml)
         
         # Update database candidate fields
         cand.score = final_score

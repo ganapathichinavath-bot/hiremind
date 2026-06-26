@@ -152,7 +152,7 @@ export default function SavedCandidates() {
               to="/submission"
               className="py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl transition-all shadow-md shadow-indigo-600/20 flex items-center gap-2"
             >
-              <span>Proceed to Step 5: Export Submission</span>
+              <span>Proceed to Export Submission</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

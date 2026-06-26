@@ -165,7 +165,7 @@ export default function JobAnalysis() {
                   ) : (
                     <>
                       <Play className="w-4 h-4 fill-white" />
-                      <span>Proceed to Step 3: Rank Candidate Pool</span>
+                      <span>Rank Candidate Pool</span>
                     </>
                   )}
                 </button>

@@ -220,7 +220,7 @@ export default function Dashboard() {
                     to="/job-analysis"
                     className="flex items-center justify-center gap-2 py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl transition-all shadow-md shadow-indigo-600/20"
                   >
-                    <span>Proceed to Step 2: Job Criteria Setup</span>
+                    <span>Proceed to Job Criteria Setup</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>

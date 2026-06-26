@@ -28,11 +28,11 @@ export default function Layout({ children }: LayoutProps) {
   }, [isAuthenticated, navigate]);
 
   const navItems = [
-    { name: "1. Candidate Pool Ingest", href: "/dashboard", icon: LayoutDashboard },
-    { name: "2. Job Criteria Setup", href: "/job-analysis", icon: FileText },
-    { name: "3. Match & Rank Engine", href: "/ranking", icon: Users },
-    { name: "4. Saved Candidates", href: "/saved-candidates", icon: Heart },
-    { name: "5. Export Submission", href: "/submission", icon: Download },
+    { name: "Candidate Ingest", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Job Criteria Setup", href: "/job-analysis", icon: FileText },
+    { name: "Match & Rank Engine", href: "/ranking", icon: Users },
+    { name: "Saved Candidates", href: "/saved-candidates", icon: Heart },
+    { name: "Export Submission", href: "/submission", icon: Download },
   ];
 
 

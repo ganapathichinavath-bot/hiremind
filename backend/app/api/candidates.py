@@ -43,19 +43,17 @@ def upload_candidates(
 ):
     try:
         content = file.file.read()
-        lines = content.decode("utf-8").split("\n")
+        lines = content.decode("utf-8-sig").splitlines()
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to read file: {e}")
         
     generator = EmbeddingGenerator()
     chroma = ChromaStore()
     
-    count = 0
-    ids_to_add = []
-    embeddings_to_add = []
-    metadatas_to_add = []
+    parsed_candidates = []
+    texts_to_embed = []
     
-    # Process line by line
+    # Process line by line to parse JSON and check database
     for line in lines:
         if not line.strip():
             continue
@@ -97,28 +95,31 @@ def upload_candidates(
             )
             db.add(db_cand)
             
-        # Generate Text and embedding
         text = build_candidate_text(cand_dict)
-        embedding = generator.get_embedding(text)
-        
-        ids_to_add.append(candidate_id)
-        embeddings_to_add.append(embedding.tolist())
-        metadatas_to_add.append({
+        texts_to_embed.append(text)
+        parsed_candidates.append({
             "candidate_id": candidate_id,
             "years_of_experience": yoe,
             "current_title": curr_title,
             "location": loc
         })
         
-        count += 1
-        
     db.commit()
     
-    # Store to ChromaDB vector store
-    if ids_to_add:
-        chroma.add_candidates(ids_to_add, embeddings_to_add, metadatas_to_add)
-        
-    return {"status": "success", "imported": count}
+    # Generate embeddings in batch and upload to Chroma
+    if parsed_candidates:
+        try:
+            embeddings = generator.get_embeddings(texts_to_embed)
+            ids_to_add = [c["candidate_id"] for c in parsed_candidates]
+            embeddings_to_add = [emb.tolist() for emb in embeddings]
+            metadatas_to_add = parsed_candidates
+            
+            chroma.add_candidates(ids_to_add, embeddings_to_add, metadatas_to_add)
+        except Exception as e:
+            print(f"Error storing to ChromaDB: {e}")
+            # Do not fail request if Chroma store fails to sync, but log it
+            
+    return {"status": "success", "imported": len(parsed_candidates)}
 
 @router.get("", response_model=Dict[str, Any])
 def list_candidates(

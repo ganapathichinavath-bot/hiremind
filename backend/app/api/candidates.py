@@ -17,23 +17,34 @@ router = APIRouter(prefix="/candidates", tags=["candidates"])
 
 def build_candidate_text(candidate: Dict[str, Any]) -> str:
     parts = []
-    profile = candidate.get("profile", {})
-    parts.append(profile.get("headline", ""))
-    parts.append(profile.get("summary", ""))
-    parts.append(profile.get("current_title", ""))
+    profile = candidate.get("profile")
+    if isinstance(profile, dict):
+        parts.append(profile.get("headline") or "")
+        parts.append(profile.get("summary") or "")
+        parts.append(profile.get("current_title") or "")
     
-    for role in candidate.get("career_history", []):
-        parts.append(role.get("title", ""))
-        parts.append(role.get("description", ""))
+    career_history = candidate.get("career_history")
+    if isinstance(career_history, list):
+        for role in career_history:
+            if isinstance(role, dict):
+                parts.append(role.get("title") or "")
+                parts.append(role.get("description") or "")
         
-    for edu in candidate.get("education", []):
-        parts.append(edu.get("field_of_study", ""))
-        parts.append(edu.get("degree", ""))
+    education = candidate.get("education")
+    if isinstance(education, list):
+        for edu in education:
+            if isinstance(edu, dict):
+                parts.append(edu.get("field_of_study") or "")
+                parts.append(edu.get("degree") or "")
         
-    for skill in candidate.get("skills", []):
-        parts.append(skill.get("name", ""))
+    skills = candidate.get("skills")
+    if isinstance(skills, list):
+        for skill in skills:
+            if isinstance(skill, dict):
+                parts.append(skill.get("name") or "")
         
-    return " ".join(filter(None, parts))
+    res = " ".join(filter(None, parts)).strip()
+    return res if res else " "
 
 @router.post("/upload", response_model=Dict[str, Any])
 def upload_candidates(
@@ -67,12 +78,35 @@ def upload_candidates(
             continue
             
         # Denormalize simple attributes
-        profile = cand_dict.get("profile", {})
+        profile = cand_dict.get("profile")
+        if not isinstance(profile, dict):
+            profile = {}
+            
         yoe = profile.get("years_of_experience", 0.0)
-        curr_title = profile.get("current_title", "")
-        curr_company = profile.get("current_company", "")
-        loc = f"{profile.get('location', '')}, {profile.get('country', '')}".strip(", ")
-        skills_list = [s.get("name", "") for s in cand_dict.get("skills", [])]
+        if yoe is None:
+            yoe = 0.0
+            
+        curr_title = profile.get("current_title") or ""
+        curr_company = profile.get("current_company") or ""
+        
+        loc_parts = []
+        loc_val = profile.get("location")
+        if loc_val:
+            loc_parts.append(str(loc_val))
+        country_val = profile.get("country")
+        if country_val:
+            loc_parts.append(str(country_val))
+        loc = ", ".join(loc_parts)
+        
+        skills = cand_dict.get("skills")
+        if not isinstance(skills, list):
+            skills = []
+        skills_list = []
+        for s in skills:
+            if isinstance(s, dict):
+                name_val = s.get("name")
+                if name_val:
+                    skills_list.append(str(name_val))
         
         # Check if already exists
         db_cand = db.query(Candidate).filter(Candidate.candidate_id == candidate_id).first()

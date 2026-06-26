@@ -15,7 +15,7 @@ export default function Submission() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:8000").replace(/^http:\/\/(?!localhost|127\.0\.0\.1)/, "https://");
 
   const handleExport = async () => {
     if (!token) return;

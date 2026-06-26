@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const result = await signInWithPopup(auth, googleProvider);
     const idToken = await result.user.getIdToken();
 
-    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+    const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:8000").replace(/^http:\/\/(?!localhost|127\.0\.0\.1)/, "https://");
     const response = await fetch(`${API_URL}/api/auth/google-login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

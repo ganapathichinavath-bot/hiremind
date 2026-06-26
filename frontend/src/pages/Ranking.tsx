@@ -45,7 +45,7 @@ export default function Ranking() {
   const [selectedCandidate, setSelectedCandidate] = useState<any>(null);
   const [modalLoading, setModalLoading] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:8000").replace(/^http:\/\/(?!localhost|127\.0\.0\.1)/, "https://");
 
   const fetchCandidates = async () => {
     if (!token) return;

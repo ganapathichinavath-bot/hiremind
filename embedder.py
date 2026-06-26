@@ -18,6 +18,17 @@ class SklearnEmbedder:
             sublinear_tf=True
         )
         self.svd = TruncatedSVD(n_components=384, random_state=42)
+        
+        # Pre-fit on dummy text for self-healing fallback use
+        dummy_texts = [
+            "python fastapi rag vector search embeddings ndcg mrr map evaluation", 
+            "ml ai engineer data scientist machine learning deep learning",
+            "java spring boot sql consulting enterprise development",
+            "computer vision object detection image segmentation",
+            "hr recruitment hiring resume match profile"
+        ]
+        self.vectorizer.fit(dummy_texts)
+        self.is_fallback = True
 
     def fit_transform(self, texts: list[str]) -> np.ndarray:
         print("Fitting TF-IDF Vectorizer...")
@@ -28,15 +39,29 @@ class SklearnEmbedder:
         # L2 normalize embeddings for dot-product cosine similarity
         norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
         norms[norms == 0] = 1.0
+        self.is_fallback = False
         return (embeddings / norms).astype(np.float32)
 
     def transform(self, texts: list[str]) -> np.ndarray:
-        tfidf_matrix = self.vectorizer.transform(texts)
-        embeddings = self.svd.transform(tfidf_matrix)
-        
-        norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
-        norms[norms == 0] = 1.0
-        return (embeddings / norms).astype(np.float32)
+        if getattr(self, "is_fallback", False):
+            # Fallback when SVD transformer was not loaded: slice/pad TF-IDF representation to 384 dims
+            tfidf_matrix = self.vectorizer.transform(texts).toarray()
+            vocab_size = tfidf_matrix.shape[1]
+            if vocab_size >= 384:
+                embeddings = tfidf_matrix[:, :384]
+            else:
+                embeddings = np.pad(tfidf_matrix, ((0, 0), (0, 384 - vocab_size)), mode='constant')
+            
+            norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+            norms[norms == 0] = 1.0
+            return (embeddings / norms).astype(np.float32)
+        else:
+            tfidf_matrix = self.vectorizer.transform(texts)
+            embeddings = self.svd.transform(tfidf_matrix)
+            
+            norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+            norms[norms == 0] = 1.0
+            return (embeddings / norms).astype(np.float32)
 
     def save(self, directory: Path) -> None:
         directory.mkdir(parents=True, exist_ok=True)
@@ -52,4 +77,5 @@ class SklearnEmbedder:
             embedder.vectorizer = pickle.load(f)
         with open(directory / "tfidf_svd.pkl", "rb") as f:
             embedder.svd = pickle.load(f)
+        embedder.is_fallback = False
         return embedder

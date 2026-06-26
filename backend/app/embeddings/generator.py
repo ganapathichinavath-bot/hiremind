@@ -26,7 +26,7 @@ class EmbeddingGenerator:
                 self.embedder = SklearnEmbedder.load(ARTIFACTS_DIR)
                 print("Successfully loaded precomputed SklearnEmbedder.")
             except Exception as e:
-                print(f"Warning: Could not load precomputed SklearnEmbedder from {ARTIFACTS_DIR}: {e}. Initializing fresh instance.")
+                print(f"Warning: Could not load precomputed SklearnEmbedder from {ARTIFACTS_DIR}: {e}. Initializing fresh fallback instance.")
                 self.embedder = SklearnEmbedder()
                     
     def get_embedding(self, text: str) -> np.ndarray:

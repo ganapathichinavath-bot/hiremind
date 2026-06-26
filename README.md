@@ -8,59 +8,43 @@ app_port: 7860
 pinned: false
 ---
 
-# Redrob Candidate Ranker
+# HIREMIND AI - Recruiter Copilot
 
-Production-ready full-stack app and offline ranking pipeline for the INDIA RUNS Intelligent Candidate Discovery and Ranking Challenge.
+An intelligent full-stack candidate discovery, matching, and ranking engine for recruiters. The system parses job descriptions across any domain dynamically, extracts target skills, and scores candidate pools using a hybrid matching system.
 
-The system ranks Senior AI Engineer candidates using a hybrid recruiter-style score:
-
-- structured JD signals for retrieval, vector search, Python, evaluation, and production ML
-- career consistency and seniority fit checks
-- Redrob availability and hiring-intent signals
-- local TF-IDF + SVD semantic similarity
-- honeypot and keyword-stuffing penalties
-
-No external API is required at ranking time.
+## Key Features
+- **Dynamic Job Description Support**: Dynamically extracts skills, experience targets, and requirements from *any* uploaded JD (Java, React/Frontend, DevOps, ML/AI, etc.).
+- **Conditional ML Penalties**: Preserves strict disqualifications and career trajectory filters for AI/ML roles while allowing non-ML/AI candidates to rank normally without penalization.
+- **Robust Database Layers**: Integrated with ChromaDB and SQLite, using optimized connection pooling and timeout handling (`timeout=30`) to prevent transaction locking issues.
+- **Explainable AI Reasoning**: Outputs clean, readable justification reports detailing why each candidate matched.
+- **No External API Dependencies**: Scores candidate pools locally using high-performance TF-IDF + SVD embeddings.
 
 ## Production Stack
-
 ```text
 frontend/  Next.js + Tailwind recruiter UI
 backend/   FastAPI ranking API
 artifacts/ local ranking model artifacts
 output/    ranked CSV submissions
-app.py     Streamlit fallback/demo app
 ```
 
-The recommended public deployment is:
+## Local Setup & Development
 
-- frontend on Vercel
-- backend on Railway, Render, or Hugging Face Spaces
-- artifacts bundled or mounted on the backend host
-
-See `FULL_STACK_DEPLOYMENT.md` for the free deployment guide.
-
-## App Modes
-
-### Upload Ranking
-
-Public users can upload a JSON or JSONL candidate sample and download a ranked CSV with reasoning.
-
+### 1. Backend API (FastAPI)
 ```bash
-uvicorn backend.main:app --reload --port 8000
+# Activate your virtual environment
+.venv\Scripts\activate
+
+# Start the FastAPI server
+.\.venv\Scripts\uvicorn backend.app.main:app --reload --port 8000
+```
+
+### 2. Frontend UI (Next.js)
+```bash
 cd frontend
 npm install
 npm run dev
 ```
-
-### Full Dataset Submission
-
-When `candidates.jsonl` and the precomputed `artifacts/` directory are available on the server, the app can generate and download the top-100 `submission.csv`.
-
-```bash
-python precompute.py
-python rank.py --out output/submission.csv
-```
+Open [http://localhost:3000](http://localhost:3000) to access the recruiter workspace.
 
 Expected data path:
 

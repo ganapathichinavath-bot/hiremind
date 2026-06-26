@@ -28,11 +28,11 @@ export default function Layout({ children }: LayoutProps) {
   }, [isAuthenticated, navigate]);
 
   const navItems = [
-    { name: "Dashboard 📊", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Job Analysis 📝", href: "/job-analysis", icon: FileText },
-    { name: "Candidate Ranking 🏆", href: "/ranking", icon: Users },
-    { name: "Saved Candidates ❤️", href: "/saved-candidates", icon: Heart },
-    { name: "Submission Generator 📥", href: "/submission", icon: Download },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Job Analysis", href: "/job-analysis", icon: FileText },
+    { name: "Candidate Ranking", href: "/ranking", icon: Users },
+    { name: "Saved Candidates", href: "/saved-candidates", icon: Heart },
+    { name: "Submission Generator", href: "/submission", icon: Download },
   ];
 
 
@@ -96,7 +96,7 @@ export default function Layout({ children }: LayoutProps) {
             className="flex items-center justify-center w-full gap-2 px-4 py-2.5 bg-rose-600/10 text-rose-400 border border-rose-500/20 rounded-xl font-medium text-sm hover:bg-rose-600 hover:text-white transition-all duration-300"
           >
             <LogOut className="w-4 h-4" />
-            <span>Sign Out 🚪</span>
+            <span>Sign Out</span>
           </button>
         </div>
       </aside>
@@ -106,11 +106,11 @@ export default function Layout({ children }: LayoutProps) {
         {/* Header */}
         <header className="h-16 border-b border-slate-800/80 bg-slate-900/20 flex items-center justify-between px-8 backdrop-blur-md z-10">
           <div className="flex items-center gap-3">
-            <h2 className="text-sm font-medium text-slate-400">Welcome to Recruiter workspace 👋</h2>
+            <h2 className="text-sm font-medium text-slate-400">Welcome to Recruiter workspace</h2>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-xs text-slate-400">
-              India Runs Challenge Mode 🏆
+              India Runs Challenge Mode
             </div>
             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
           </div>

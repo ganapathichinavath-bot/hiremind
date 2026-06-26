@@ -52,11 +52,11 @@ export default function Submission() {
   };
 
   const validationChecks = [
-    { title: "Header Row Compliance 📋", desc: "First row matches: candidate_id,rank,score,reasoning", check: true },
-    { title: "Exact Row Bounds 📊", desc: "Exactly 100 candidate records (rows 2 to 101)", check: true },
-    { title: "Unique Ranks 🔢", desc: "Every rank from 1 to 100 exists exactly once", check: true },
-    { title: "Non-Increasing Scores 📉", desc: "Composite score at rank X is >= score at rank X+1", check: true },
-    { title: "Tie-Break Ascending 🔀", desc: "Equal scores sorted by candidate_id in ascending order", check: true }
+    { title: "Header Row Compliance", desc: "First row matches: candidate_id,rank,score,reasoning", check: true },
+    { title: "Exact Row Bounds", desc: "Exactly 100 candidate records (rows 2 to 101)", check: true },
+    { title: "Unique Ranks", desc: "Every rank from 1 to 100 exists exactly once", check: true },
+    { title: "Non-Increasing Scores", desc: "Composite score at rank X is >= score at rank X+1", check: true },
+    { title: "Tie-Break Ascending", desc: "Equal scores sorted by candidate_id in ascending order", check: true }
   ];
 
   return (
@@ -65,12 +65,13 @@ export default function Submission() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-            Submission Generator 📥
+            Submission Generator
           </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Export challenge-compliant candidate submission file with automated validation 🏆
+            Export challenge-compliant candidate submission file with automated validation
           </p>
         </div>
+
 
         {errorMsg && (
           <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs">

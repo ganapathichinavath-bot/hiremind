@@ -114,10 +114,10 @@ export default function Dashboard() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-              Copilot Overview 📊
+              Copilot Overview
             </h1>
             <p className="text-slate-400 text-sm mt-1">
-              Real-time intelligence dashboard showing candidate pool statistics 📈
+              Real-time intelligence dashboard showing candidate pool statistics
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -125,7 +125,7 @@ export default function Dashboard() {
               onClick={fetchDashboardData}
               className="px-4 py-2 bg-slate-900 border border-slate-800 text-xs font-semibold rounded-xl text-slate-300 hover:bg-slate-850 hover:text-white transition-all"
             >
-              Refresh Data 🔄
+              Refresh Data
             </button>
           </div>
         </div>
@@ -136,7 +136,7 @@ export default function Dashboard() {
           <div className="glass-card rounded-2xl p-6 border border-slate-800/80">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Ingested 👤</span>
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Ingested</span>
                 <h3 className="text-3xl font-bold mt-2 text-white">{stats?.total_candidates || 0}</h3>
               </div>
               <div className="p-3 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl">
@@ -150,7 +150,7 @@ export default function Dashboard() {
           <div className="glass-card rounded-2xl p-6 border border-slate-800/80">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Avg Fit Match ⚡</span>
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Avg Fit Match</span>
                 <h3 className="text-3xl font-bold mt-2 text-white">
                   {stats?.average_score ? `${(stats.average_score * 100).toFixed(1)}%` : "0.0%"}
                 </h3>
@@ -166,7 +166,7 @@ export default function Dashboard() {
           <div className="glass-card rounded-2xl p-6 border border-slate-800/80">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Disqualified 🛑</span>
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Disqualified</span>
                 <h3 className="text-3xl font-bold mt-2 text-rose-400">{stats?.disqualified_count || 0}</h3>
               </div>
               <div className="p-3 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-xl">
@@ -180,7 +180,7 @@ export default function Dashboard() {
           <div className="glass-card rounded-2xl p-6 border border-slate-800/80">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Honeypot Traps 🍯</span>
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Honeypot Traps</span>
                 <h3 className="text-3xl font-bold mt-2 text-amber-500">{stats?.honeypot_count || 0}</h3>
               </div>
               <div className="p-3 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-xl">
@@ -198,7 +198,7 @@ export default function Dashboard() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <UploadCloud className="w-5 h-5 text-indigo-400" />
-                <h2 className="text-lg font-bold text-slate-200">Dataset Ingest 📤</h2>
+                <h2 className="text-lg font-bold text-slate-200">Dataset Ingest</h2>
               </div>
               <p className="text-xs text-slate-400 leading-relaxed mb-6">
                 Upload new recruiter candidate pools in `.jsonl` format. The system will automatically validate the schema, calculate core vectors, and persist profiles.
@@ -213,7 +213,7 @@ export default function Dashboard() {
               {uploadResult && (
                 <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs mb-4 flex items-center gap-2">
                   <CheckCircle className="w-4 h-4" />
-                  <span>Ingested {uploadResult.imported} records successfully! 🎉</span>
+                  <span>Ingested {uploadResult.imported} records successfully!</span>
                 </div>
               )}
             </div>
@@ -227,13 +227,13 @@ export default function Dashboard() {
                 {uploading ? (
                   <>
                     <div className="w-6 h-6 border-t-2 border-indigo-500 rounded-full animate-spin mb-3"></div>
-                    <span className="text-xs font-medium text-slate-300">Processing vectors... ⚙️</span>
+                    <span className="text-xs font-medium text-slate-300">Processing vectors...</span>
                   </>
                 ) : (
                   <>
                     <FileCode className="w-8 h-8 text-slate-500 mb-3" />
                     <span className="text-xs font-semibold text-slate-300">Select candidates.jsonl</span>
-                    <span className="text-[10px] text-slate-500 mt-1">Accepts UTF-8 JSON lines 📂</span>
+                    <span className="text-[10px] text-slate-500 mt-1">Accepts UTF-8 JSON lines</span>
                     <input 
                       type="file" 
                       accept=".jsonl,.json" 
@@ -252,7 +252,7 @@ export default function Dashboard() {
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-indigo-400" />
-                <h2 className="text-lg font-bold text-slate-200">Current Candidate Shortlist ✨</h2>
+                <h2 className="text-lg font-bold text-slate-200">Current Candidate Shortlist</h2>
               </div>
               <Link 
                 to="/ranking" 
@@ -269,7 +269,7 @@ export default function Dashboard() {
               </div>
             ) : topCandidates.length === 0 ? (
               <div className="py-12 text-center text-slate-500 text-xs">
-                No candidates scored yet. Run candidate ranking in "Job Analysis" or upload a dataset. 🕵️‍♂️
+                No candidates scored yet. Run candidate ranking in "Job Analysis" or upload a dataset.
               </div>
             ) : (
               <div className="space-y-4">
@@ -313,7 +313,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Skill Distribution */}
           <div className="glass-card rounded-3xl p-6 border border-slate-800">
-            <h3 className="text-md font-bold text-slate-200 mb-6">Top Extracted Skills Distribution 🤹‍♂️</h3>
+            <h3 className="text-md font-bold text-slate-200 mb-6">Top Extracted Skills Distribution</h3>
             <div className="h-[250px] w-full">
               {skillChartData.length === 0 ? (
                 <div className="h-full flex items-center justify-center text-slate-500 text-xs">No skill data available</div>
@@ -340,7 +340,7 @@ export default function Dashboard() {
 
           {/* Experience Distribution */}
           <div className="glass-card rounded-3xl p-6 border border-slate-800">
-            <h3 className="text-md font-bold text-slate-200 mb-6">Experience Level Distribution 📈</h3>
+            <h3 className="text-md font-bold text-slate-200 mb-6">Experience Level Distribution</h3>
             <div className="h-[250px] w-full">
               {experienceChartData.length === 0 ? (
                 <div className="h-full flex items-center justify-center text-slate-500 text-xs">No experience data available</div>

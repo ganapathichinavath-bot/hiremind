@@ -39,7 +39,7 @@ export default function Landing() {
           onClick={handleCTA}
           className="px-5 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-bold rounded-xl text-slate-200 transition-all"
         >
-          {isAuthenticated ? "Dashboard 📊" : "Sign In 🔑"}
+          {isAuthenticated ? "Dashboard" : "Sign In"}
         </button>
       </header>
 

@@ -167,14 +167,14 @@ export default function Ranking() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-              Intelligent Candidate Discovery 🏆
+              Intelligent Candidate Discovery
             </h1>
             <p className="text-slate-400 text-sm mt-1">
-              Search and filter matched candidate profiles based on hybrid scores 🔍
+              Search and filter matched candidate profiles based on hybrid scores
             </p>
           </div>
           <div className="text-xs text-indigo-400 font-semibold px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
-            {total} Profiles Matched 👤
+            {total} Profiles Matched
           </div>
         </div>
 
@@ -183,7 +183,7 @@ export default function Ranking() {
           <form onSubmit={handleApplyFilters} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
               <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                Title / Keyword search 📝
+                Title / Keyword search
               </label>
               <div className="relative">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -199,7 +199,7 @@ export default function Ranking() {
 
             <div>
               <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                Location 📍
+                Location
               </label>
               <div className="relative">
                 <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -245,7 +245,7 @@ export default function Ranking() {
                 type="submit"
                 className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold text-xs rounded-xl transition-all shadow-lg shadow-indigo-600/20"
               >
-                Apply Filters ⚡
+                Apply Filters
               </button>
               <button
                 type="button"
@@ -463,7 +463,7 @@ export default function Ranking() {
 
                       {/* Score Circle */}
                       <div className="glass-card rounded-2xl p-5 border border-slate-800 flex flex-col items-center justify-center text-center">
-                        <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mb-4">Fit Match Score ⚡</span>
+                        <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mb-4">Fit Match Score</span>
                         <div className="relative w-28 h-28 flex items-center justify-center bg-indigo-500/5 border border-indigo-500/20 rounded-full shadow-inner">
                           <div className="text-center">
                             <span className="text-2xl font-extrabold text-white">{matchPct}%</span>
@@ -477,7 +477,7 @@ export default function Ranking() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       {/* Score Metrics Radar Chart */}
                       <div className="glass-card rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
-                        <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mb-4">Matching Vector Breakdown 📈</span>
+                        <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mb-4">Matching Vector Breakdown</span>
                         <div className="h-[200px] w-full">
                           <ResponsiveContainer width="100%" height="100%">
                             <RadarChart cx="50%" cy="50%" outerRadius="75%" data={getRadarData()}>
@@ -494,7 +494,7 @@ export default function Ranking() {
                       <div className="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
                         <div className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
                           <TrendingUp className="w-4 h-4 text-indigo-400" />
-                          <span>AI Decision Explanation 🤖</span>
+                          <span>AI Decision Explanation</span>
                         </div>
                         <p className="text-xs text-slate-300 leading-relaxed bg-indigo-950/20 border border-indigo-900/20 p-3 rounded-xl">
                           {explanation || "Generating decision explanation..."}
@@ -507,7 +507,7 @@ export default function Ranking() {
                       <div className="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
                         <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                           <Award className="w-4 h-4 text-indigo-400" />
-                          <span>Candidate Skills 🎖️</span>
+                          <span>Candidate Skills</span>
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           {selectedCandidate.profile_data?.skills?.map((skill: any) => (
@@ -525,7 +525,7 @@ export default function Ranking() {
                       <div className="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
                         <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                           <UserCheck className="w-4 h-4 text-indigo-400" />
-                          <span>Platform Signals 📡</span>
+                          <span>Platform Signals</span>
                         </div>
                         <div className="grid grid-cols-2 gap-4 text-xs">
                           <div className="p-3 bg-slate-950/40 border border-slate-850 rounded-xl">

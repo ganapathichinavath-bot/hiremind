@@ -94,10 +94,10 @@ export default function JobAnalysis() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-            Job Description Analysis 📝
+            Job Description Analysis
           </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Ingest and parse target job requirements to generate semantic anchors ⚙️
+            Ingest and parse target job requirements to generate semantic anchors
           </p>
         </div>
 
@@ -120,7 +120,7 @@ export default function JobAnalysis() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <UploadCloud className="w-5 h-5 text-indigo-400" />
-                <h2 className="text-lg font-bold text-slate-200">Ingest Job Profile 📥</h2>
+                <h2 className="text-lg font-bold text-slate-200">Ingest Job Profile</h2>
               </div>
               <p className="text-xs text-slate-400 leading-relaxed mb-6">
                 Upload target job profile (DOCX or text). The system will extract semantic markers, skills taxonomy, experience targets, and certification requirements.
@@ -142,7 +142,7 @@ export default function JobAnalysis() {
                   <>
                     <FileText className="w-8 h-8 text-slate-500 mb-3" />
                     <span className="text-xs font-semibold text-slate-300">Select job_description.docx</span>
-                    <span className="text-[10px] text-slate-500 mt-1">DOCX, Text format accepted 📂</span>
+                    <span className="text-[10px] text-slate-500 mt-1">DOCX, Text format accepted</span>
                     <input 
                       type="file" 
                       accept=".docx,.txt" 
@@ -165,7 +165,7 @@ export default function JobAnalysis() {
                   ) : (
                     <>
                       <Play className="w-4 h-4 fill-white" />
-                      <span>Rank Candidate Pool 🏆</span>
+                      <span>Rank Candidate Pool</span>
                     </>
                   )}
                 </button>
@@ -177,7 +177,7 @@ export default function JobAnalysis() {
           <div className="glass-card rounded-3xl p-6 border border-slate-800 lg:col-span-2">
             <div className="flex items-center gap-2 mb-6">
               <Sparkles className="w-5 h-5 text-indigo-400" />
-              <h2 className="text-lg font-bold text-slate-200">Extracted System Criteria 📋</h2>
+              <h2 className="text-lg font-bold text-slate-200">Extracted System Criteria</h2>
             </div>
 
             {!jdData ? (
@@ -199,7 +199,7 @@ export default function JobAnalysis() {
                   <div className="p-4 bg-slate-900/40 border border-slate-800 rounded-2xl">
                     <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                       <Cpu className="w-4 h-4 text-indigo-400" />
-                      <span>Experience Band Target ⏳</span>
+                      <span>Experience Band Target</span>
                     </div>
                     <p className="text-sm font-semibold text-slate-200">{jdData.extracted_experience || "None parsed"}</p>
                   </div>
@@ -208,7 +208,7 @@ export default function JobAnalysis() {
                   <div className="p-4 bg-slate-900/40 border border-slate-800 rounded-2xl">
                     <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                       <GraduationCap className="w-4 h-4 text-indigo-400" />
-                      <span>Education Requirements 🎓</span>
+                      <span>Education Requirements</span>
                     </div>
                     <p className="text-sm font-semibold text-slate-200 truncate">{jdData.extracted_education || "None parsed"}</p>
                   </div>
@@ -218,7 +218,7 @@ export default function JobAnalysis() {
                 <div>
                   <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
                     <Award className="w-4 h-4 text-indigo-400" />
-                    <span>Extracted Core Skills 🎖️</span>
+                    <span>Extracted Core Skills</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {jdData.extracted_skills?.map((skill: string) => (
@@ -239,7 +239,7 @@ export default function JobAnalysis() {
                 <div>
                   <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
                     <ListTodo className="w-4 h-4 text-indigo-400" />
-                    <span>Extracted Roles & Responsibilities 📋</span>
+                    <span>Extracted Roles & Responsibilities</span>
                   </div>
                   <ul className="space-y-2">
                     {jdData.extracted_responsibilities?.map((item: string, idx: number) => (

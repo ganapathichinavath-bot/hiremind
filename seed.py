@@ -269,6 +269,16 @@ def seed_database():
         with open(subscores_path, "rb") as handle:
             subscores = pickle.load(handle)
 
+    disqualified_ids = set()
+    disqualified_path = ARTIFACTS_DIR / "disqualified.json"
+    if disqualified_path.exists():
+        try:
+            with open(disqualified_path, "r", encoding="utf-8") as handle:
+                dq_data = json.load(handle)
+                disqualified_ids = {item["candidate_id"] for item in dq_data}
+        except Exception as e:
+            print(f"Warning: Could not load disqualified.json: {e}")
+
     embeddings = None
     candidate_ids = []
     embeddings_path = ARTIFACTS_DIR / "embeddings.npy"
@@ -277,9 +287,12 @@ def seed_database():
         embeddings = np.load(embeddings_path)
         candidate_ids = list(np.load(ids_path, allow_pickle=True))
 
+    candidate_ids_map = {cid: idx for idx, cid in enumerate(candidate_ids)}
     chroma = ChromaStore()
     
-    print("Ingesting candidates to SQLite...")
+    print("Fetching existing candidates from SQLite...")
+    existing_ids = set(r[0] for r in db.query(Candidate.candidate_id).all())
+    print(f"Found {len(existing_ids)} existing candidates. Starting ingestion...")
     
     # We read candidates line by line
     count = 0
@@ -303,14 +316,15 @@ def seed_database():
             if not candidate_id:
                 continue
                 
-            # Check if already exists in DB
-            exists = db.query(Candidate).filter(Candidate.candidate_id == candidate_id).first()
-            if exists:
+            # Check if already exists in DB (O(1) set lookup)
+            if candidate_id in existing_ids:
                 count += 1
                 continue
                 
             profile = cand_dict.get("profile", {})
             yoe = profile.get("years_of_experience", 0.0)
+            if yoe is None:
+                yoe = 0.0
             curr_title = profile.get("current_title", "")
             curr_company = profile.get("current_company", "")
             loc = f"{profile.get('location', '')}, {profile.get('country', '')}".strip(", ")
@@ -335,11 +349,15 @@ def seed_database():
                 beh_score = float(sub.get("recruitability_score", 0.0) / 100.0)
                 is_disq = len(sub.get("penalties", [])) > 0
                 disq_reason = ", ".join(sub.get("penalties", [])) if is_disq else None
-            else:
-                # If disqualified early (honeypot)
+            elif candidate_id in disqualified_ids:
                 is_hp = True
                 is_disq = True
                 disq_reason = "honeypot check failed"
+            else:
+                # New or unprocessed candidate: let it default to active/undisqualified
+                is_hp = False
+                is_disq = False
+                disq_reason = None
                 
             db_cand = Candidate(
                 candidate_id=candidate_id,
@@ -361,9 +379,9 @@ def seed_database():
             )
             db_candidates.append(db_cand)
             
-            # Prepare ChromaDB elements
-            if embeddings is not None and candidate_id in candidate_ids:
-                idx = candidate_ids.index(candidate_id)
+            # Prepare ChromaDB elements (O(1) dict lookup)
+            if embeddings is not None and candidate_id in candidate_ids_map:
+                idx = candidate_ids_map[candidate_id]
                 chroma_ids.append(candidate_id)
                 chroma_embeddings.append(embeddings[idx].tolist())
                 chroma_metadatas.append({
@@ -376,23 +394,24 @@ def seed_database():
             if len(db_candidates) >= batch_size:
                 db.bulk_save_objects(db_candidates)
                 db.commit()
-                db_candidates = []
                 
                 if chroma_ids:
                     chroma.add_candidates(chroma_ids, chroma_embeddings, chroma_metadatas)
                     chroma_ids, chroma_embeddings, chroma_metadatas = [], [], []
                 
-                count += len(chroma_ids) if chroma_ids else batch_size
+                count += len(db_candidates)
+                db_candidates = []
                 print(f"Ingested {count} candidates...")
                 
         # Save remaining candidates
         if db_candidates:
             db.bulk_save_objects(db_candidates)
             db.commit()
+            count += len(db_candidates)
         if chroma_ids:
             chroma.add_candidates(chroma_ids, chroma_embeddings, chroma_metadatas)
             
-        print(f"Finished seeding all candidates.")
+        print(f"Finished seeding all candidates. Total: {count}")
         
     db.close()
 

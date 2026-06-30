@@ -61,10 +61,8 @@ def upload_candidates(
     generator = EmbeddingGenerator()
     chroma = ChromaStore()
     
-    parsed_candidates = []
-    texts_to_embed = []
-    
-    # Process line by line to parse JSON and check database
+    # Parse lines from the upload
+    candidates_to_process = []
     for line in lines:
         if not line.strip():
             continue
@@ -72,11 +70,27 @@ def upload_candidates(
             cand_dict = json.loads(line)
         except Exception:
             continue
-            
         candidate_id = cand_dict.get("candidate_id")
-        if not candidate_id:
-            continue
+        if candidate_id:
+            candidates_to_process.append(cand_dict)
             
+    if not candidates_to_process:
+        return {"status": "success", "imported": 0}
+        
+    # Get all candidate IDs in the upload
+    upload_ids = [c["candidate_id"] for c in candidates_to_process]
+    
+    # Query SQLite database for existing records in one bulk query
+    existing_cands = {
+        c.candidate_id: c for c in db.query(Candidate).filter(Candidate.candidate_id.in_(upload_ids)).all()
+    }
+    
+    parsed_candidates = []
+    texts_to_embed = []
+    
+    for cand_dict in candidates_to_process:
+        candidate_id = cand_dict["candidate_id"]
+        
         # Denormalize simple attributes
         profile = cand_dict.get("profile")
         if not isinstance(profile, dict):
@@ -108,8 +122,8 @@ def upload_candidates(
                 if name_val:
                     skills_list.append(str(name_val))
         
-        # Check if already exists
-        db_cand = db.query(Candidate).filter(Candidate.candidate_id == candidate_id).first()
+        # Check if already exists in our bulk-loaded dict
+        db_cand = existing_cands.get(candidate_id)
         if db_cand:
             db_cand.profile_data = cand_dict
             db_cand.years_of_experience = yoe
@@ -128,6 +142,8 @@ def upload_candidates(
                 skills_list=skills_list
             )
             db.add(db_cand)
+            # Register in existing_cands to avoid duplicates in the same file
+            existing_cands[candidate_id] = db_cand
             
         text = build_candidate_text(cand_dict)
         texts_to_embed.append(text)
@@ -140,18 +156,20 @@ def upload_candidates(
         
     db.commit()
     
-    # Generate embeddings in batch and upload to Chroma
-    if parsed_candidates:
+    # Generate embeddings and add to Chroma in batches of 500
+    chunk_size = 500
+    for i in range(0, len(parsed_candidates), chunk_size):
+        chunk_parsed = parsed_candidates[i : i + chunk_size]
+        chunk_texts = texts_to_embed[i : i + chunk_size]
         try:
-            embeddings = generator.get_embeddings(texts_to_embed)
-            ids_to_add = [c["candidate_id"] for c in parsed_candidates]
+            embeddings = generator.get_embeddings(chunk_texts)
+            ids_to_add = [c["candidate_id"] for c in chunk_parsed]
             embeddings_to_add = [emb.tolist() for emb in embeddings]
-            metadatas_to_add = parsed_candidates
+            metadatas_to_add = chunk_parsed
             
             chroma.add_candidates(ids_to_add, embeddings_to_add, metadatas_to_add)
         except Exception as e:
-            print(f"Error storing to ChromaDB: {e}")
-            # Do not fail request if Chroma store fails to sync, but log it
+            print(f"Error storing candidates chunk {i} to ChromaDB: {e}")
             
     return {"status": "success", "imported": len(parsed_candidates)}
 

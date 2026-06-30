@@ -23,8 +23,8 @@ def seed_database():
     # Create a default recruiter user if none exists
     admin_user = db.query(User).filter(User.username == "admin").first()
     if not admin_user:
-        from passlib.hash import bcrypt
-        hashed = bcrypt.hash("admin123")
+        import hashlib
+        hashed = hashlib.sha256("admin123".encode()).hexdigest()
         admin_user = User(username="admin", hashed_password=hashed, role="admin")
         db.add(admin_user)
         db.commit()
